@@ -41,7 +41,7 @@ function App() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/demo", {
+      const response = await fetch("http://localhost:4000/demo", {
         method: 'POST',
         body: JSON.stringify(form),
         headers: {
@@ -66,7 +66,7 @@ function App() {
     setShowUsers(true); // Show table when "Get Data" is clicked.
 
     try {
-      const response = await fetch("http://localhost:8080/demo", {
+      const response = await fetch("http://localhost:4000/demo", {
         method: 'GET',
       });
 
@@ -96,7 +96,7 @@ function App() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/demo/${id}`, {
+      const response = await fetch(`http://localhost:4000/demo/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
