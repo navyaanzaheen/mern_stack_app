@@ -1,3 +1,4 @@
+require('dotenv').config(); // Load environment variables from .env
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -6,8 +7,12 @@ const mongoose = require('mongoose');
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/demo');
-  console.log('db connected');
+  try {
+    await mongoose.connect(process.env.MONGODB_URI); // Use MONGODB_URI from .env
+    console.log('db connected to MongoDB Atlas');
+  } catch (error) {
+    console.error('MongoDB Atlas connection error:', error);
+  }
 }
 
 const userSchema = new mongoose.Schema({
@@ -20,7 +25,12 @@ const User = mongoose.model('User', userSchema);
 const server = express();
 const port = process.env.PORT ||4000;
 
-server.use(cors());
+// Configure CORS to allow requests from your React frontend's origin
+server.use(cors({
+  origin: 'http://localhost:3000', // Or the port your React app is running on
+  credentials: true, // If you need to send cookies
+}));
+
 server.use(bodyParser.json());
 
 // CRUD-operation
@@ -53,6 +63,6 @@ server.delete('/demo/:id', async (req, res) => {
   }
 });
 
-server.listen(8080, () => {
-  console.log('server started');
+server.listen(port, '0.0.0.0', () => { //use port variable and listen on all interfaces.
+  console.log(`Server started on port ${port}`);
 });
